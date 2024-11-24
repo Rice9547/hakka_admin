@@ -36,7 +36,7 @@ const ImageUploadDialog = ({ open, onClose, onSelectImage, initialPrompt = '' })
       setError(null);
 
       const data = await uploadImage(formData);
-      setUploadedImage(data.data.url);
+      setUploadedImage(data.url);
       setSuccess('Image uploaded successfully!');
     } catch (err) {
       setError('Failed to upload image');

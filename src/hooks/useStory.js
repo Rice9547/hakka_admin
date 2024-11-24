@@ -33,10 +33,11 @@ export const useStoryActions = () => {
     }));
   };
 
-  const handleCreateStory = async (title, description, pages) => {
+  const handleCreateStory = async (title, description, cover_image, pages) => {
     const data = {
       title,
       description,
+      cover_image,
       pages: transformPages(pages)
     };
 
@@ -44,10 +45,11 @@ export const useStoryActions = () => {
     mutateStory(mutate);
   };
 
-  const handleUpdateStory = async (id, title, description, pages) => {
+  const handleUpdateStory = async (id, title, description, cover_image, pages) => {
     const data = {
       title,
       description,
+      cover_image,
       pages: transformPages(pages)
     };
 

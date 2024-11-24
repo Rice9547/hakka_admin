@@ -2,12 +2,12 @@ import { useFetcher } from '../lib/fetcher';
 import {useAuth0} from "@auth0/auth0-react";
 import {config} from "../config";
 
-export const useImageUpload = () => {
+export const useAudioUpload = () => {
   const fetcher = useFetcher();
   const { getAccessTokenSilently } = useAuth0();
 
-  const uploadImage = async (formData) => {
-    const response = await fetch( config.apiHost+'/admin/image/upload', {
+  const uploadAudio = async (formData) => {
+    const response = await fetch( config.apiHost+'/admin/audio/upload', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${await getAccessTokenSilently()}`,
@@ -24,8 +24,8 @@ export const useImageUpload = () => {
     });
   };
 
-  const generateImage = async (prompt) => {
-    const response = await fetcher('/admin/image/generate', {
+  const generateAudio = async (prompt) => {
+    const response = await fetcher('/admin/audio/generate', {
       method: 'POST',
       body: JSON.stringify({ prompt })
     });
@@ -34,7 +34,7 @@ export const useImageUpload = () => {
   };
 
   return {
-    uploadImage,
-    generateImage
+    uploadAudio,
+    generateAudio
   };
 };

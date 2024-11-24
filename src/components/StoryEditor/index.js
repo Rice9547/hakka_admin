@@ -31,7 +31,7 @@ const StoryEditor = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    coverImage: '',
+    cover_image: '',
     pages: []
   });
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -43,6 +43,7 @@ const StoryEditor = () => {
       setFormData({
         title: story.title || '',
         description: story.description || '',
+        cover_image: story.cover_image || '',
         pages: (story.pages || []).map(page => ({
           content_cn: page.content_cn || '',
           content_hakka: page.content_hakka || '',
@@ -129,9 +130,9 @@ const StoryEditor = () => {
     try {
       setSaving(true);
       if (id) {
-        await updateStory(id, formData.title, formData.description, formData.pages);
+        await updateStory(id, formData.title, formData.description, formData.cover_image, formData.pages);
       } else {
-        await createStory(formData.title, formData.description, formData.pages);
+        await createStory(formData.title, formData.description, formData.cover_image, formData.pages);
       }
       navigate('/admin');
     } catch (err) {
@@ -204,8 +205,8 @@ const StoryEditor = () => {
         />
 
         <ImageInput
-          value={formData.coverImage}
-          onChange={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+          value={formData.cover_image}
+          onChange={(url) => setFormData(prev => ({ ...prev, cover_image: url }))}
           description={formData.description}
         />
 
@@ -217,6 +218,7 @@ const StoryEditor = () => {
               onDelete={() => handleDeletePage(index)}
               onMove={(direction) => handleMovePage(index, direction)}
               onContentChange={(field, value) => handlePageContentChange(index, field, value)}
+              onAudioChange={(field, value) => handlePageContentChange(index, field, value)}
               isFirst={index === 0}
               isLast={index === formData.pages.length - 1}
             />
