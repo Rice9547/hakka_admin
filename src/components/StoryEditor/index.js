@@ -20,6 +20,7 @@ import {
 import { useStory, useStoryActions } from '../../hooks/useStory';
 import PageEditor from './PageEditor';
 import PreviewDialog from './PreviewDialog';
+import ImageInput from "./ImageInput";
 
 const StoryEditor = () => {
   const { id } = useParams();
@@ -30,6 +31,7 @@ const StoryEditor = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    coverImage: '',
     pages: []
   });
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -199,6 +201,12 @@ const StoryEditor = () => {
           multiline
           rows={3}
           required
+        />
+
+        <ImageInput
+          value={formData.coverImage}
+          onChange={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+          description={formData.description}
         />
 
         <Paper sx={{ p: 2, mt: 2 }}>

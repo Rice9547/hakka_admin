@@ -1,11 +1,32 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Navigate } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  Button,
+  CircularProgress
+} from '@mui/material';
+import { Login as LoginIcon } from '@mui/icons-material';
 
 export const LoginPage = () => {
   const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'background.default'
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (isAuthenticated) {
@@ -13,22 +34,52 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Admin Dashboard
-          </h2>
-        </div>
-        <div>
-          <button
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: 'background.default'
+      }}
+    >
+      <Container maxWidth="sm">
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{
+              mb: 4,
+              fontWeight: 'bold',
+            }}
+          >
+            Hakka Admin Dashboard
+          </Typography>
+
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<LoginIcon />}
             onClick={() => loginWithRedirect()}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            fullWidth
+            sx={{
+              py: 1.5,
+              textTransform: 'none',
+              fontSize: '1.1rem'
+            }}
           >
             Sign in
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
