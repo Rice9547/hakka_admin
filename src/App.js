@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Auth0ProviderWithNavigate } from './auth/auth0-provider';
+import { LoginPage } from './components/LoginPage';
+import { PrivateRoute } from './components/PrivateRoute';
+import { AdminDashboard } from './components/AdminDashboard';
+import StoryEditor from './components/StoryEditor';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Auth0ProviderWithNavigate>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/admin/*" element={
+            <PrivateRoute>
+              <Routes>
+                <Route index element={<AdminDashboard />} />
+                <Route path="story/new" element={<StoryEditor />} />
+                <Route path="story/:id" element={<StoryEditor />} />
+              </Routes>
+            </PrivateRoute>
+          } />
+        </Routes>
+      </Auth0ProviderWithNavigate>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
