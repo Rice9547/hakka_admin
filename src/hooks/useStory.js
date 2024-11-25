@@ -1,6 +1,11 @@
 import { useSWRConfig } from 'swr';
 import { useStoryList, useStoryDetail, useStoryMutations } from '../api/story';
 
+export const DIALECTS = [
+  { key: 'sijian', label: '四縣腔' },
+  { key: 'hailu', label: '海陸腔' },
+];
+
 export const useStories = () => {
   const { data, error, isLoading } = useStoryList();
 
@@ -27,10 +32,16 @@ export const useStoryActions = () => {
 
   const transformPages = (pages) => {
     return pages.map(page => ({
-      content_cn: page.content_cn || '',
-      content_hakka: page.content_hakka || '',
-      page_number: page.page_number
-    }));
+      content_cn: page.content_cn,
+      content_hakka: page.content_hakka,
+      page_number: page.page_number,
+      audios: Object.entries(page.audios)
+        .filter(([_, url]) => url)
+        .map(([dialect, audio_url]) => ({
+          dialect,
+          audio_url
+        }))
+    }))
   };
 
   const handleCreateStory = async (title, description, cover_image, pages) => {

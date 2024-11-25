@@ -47,7 +47,11 @@ const StoryEditor = () => {
         pages: (story.pages || []).map(page => ({
           content_cn: page.content_cn || '',
           content_hakka: page.content_hakka || '',
-          page_number: page.page_number
+          page_number: page.page_number,
+          audios: (page.audios || []).reduce((acc, audio) => {
+            acc[audio.dialect] = audio.audio_url;
+            return acc;
+          }, {})
         }))
       });
     }
@@ -61,8 +65,9 @@ const StoryEditor = () => {
         {
           content_cn: '',
           content_hakka: '',
-          page_number: prev.pages.length + 1
-        }
+          page_number: prev.pages.length + 1,
+          audios: {}
+        },
       ]
     }));
   };
@@ -92,13 +97,42 @@ const StoryEditor = () => {
     setFormData(prev => ({ ...prev, pages: newPages }));
   };
 
-  const handlePageContentChange = (index, field, value) => {
-    const newPages = [...formData.pages];
-    newPages[index] = {
-      ...newPages[index],
+  const handleMainFieldChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
       [field]: value
-    };
-    setFormData(prev => ({ ...prev, pages: newPages }));
+    }));
+  };
+
+  const handlePageContentChange = (index, field, value) => {
+    setFormData(prev => {
+      const newPages = [...prev.pages];
+      newPages[index] = {
+        ...newPages[index],
+        [field]: value
+      };
+      return {
+        ...prev,
+        pages: newPages
+      };
+    });
+  };
+
+  const handlePageAudioChange = (index, dialect, value) => {
+    setFormData(prev => {
+      const newPages = [...prev.pages];
+      newPages[index] = {
+        ...newPages[index],
+        audios: {
+          ...newPages[index].audios,
+          [dialect]: value
+        }
+      };
+      return {
+        ...prev,
+        pages: newPages
+      };
+    });
   };
 
   const validateForm = () => {
@@ -188,7 +222,7 @@ const StoryEditor = () => {
           fullWidth
           label="Story Title"
           value={formData.title}
-          onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+          onChange={(e) => handleMainFieldChange('title', e.target.value)}
           margin="normal"
           required
         />
@@ -197,7 +231,7 @@ const StoryEditor = () => {
           fullWidth
           label="Story Description"
           value={formData.description}
-          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+          onChange={(e) => handleMainFieldChange('description', e.target.value)}
           margin="normal"
           multiline
           rows={3}
@@ -206,19 +240,19 @@ const StoryEditor = () => {
 
         <ImageInput
           value={formData.cover_image}
-          onChange={(url) => setFormData(prev => ({ ...prev, cover_image: url }))}
+          onChange={(url) => handleMainFieldChange('cover_image', url)}
           description={formData.description}
         />
 
         <Paper sx={{ p: 2, mt: 2 }}>
           {formData.pages.map((page, index) => (
             <PageEditor
-              key={index}
+              key={`page-${page.page_number}`}  // 使用更明確的 key
               page={page}
               onDelete={() => handleDeletePage(index)}
               onMove={(direction) => handleMovePage(index, direction)}
               onContentChange={(field, value) => handlePageContentChange(index, field, value)}
-              onAudioChange={(field, value) => handlePageContentChange(index, field, value)}
+              onAudioChange={(dialect, value) => handlePageAudioChange(index, dialect, value)}
               isFirst={index === 0}
               isLast={index === formData.pages.length - 1}
             />

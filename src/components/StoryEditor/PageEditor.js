@@ -12,6 +12,7 @@ import {
   KeyboardArrowDown as ArrowDownIcon,
 } from '@mui/icons-material';
 import AudioUpload from './AudioUpload';
+import { DIALECTS } from '../../hooks/useStory';
 
 const PageEditor = ({
   page,
@@ -24,27 +25,27 @@ const PageEditor = ({
   disabled
 }) => {
   return (
-    <Paper elevation={2} sx={{p: 2, mb: 2}}>
-      <Box sx={{display: 'flex', alignItems: 'flex-start', gap: 2}}>
-        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+    <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <IconButton
             size="small"
             onClick={() => onMove('up')}
             disabled={isFirst || disabled}
           >
-            <ArrowUpIcon/>
+            <ArrowUpIcon />
           </IconButton>
           <IconButton
             size="small"
             onClick={() => onMove('down')}
             disabled={isLast || disabled}
           >
-            <ArrowDownIcon/>
+            <ArrowDownIcon />
           </IconButton>
         </Box>
 
-        <Box sx={{flex: 1}}>
-          <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
+        <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Typography variant="subtitle1">
               Page {page.page_number}
             </Typography>
@@ -53,9 +54,9 @@ const PageEditor = ({
               color="error"
               onClick={onDelete}
               disabled={disabled}
-              sx={{ml: 'auto'}}
+              sx={{ ml: 'auto' }}
             >
-              <DeleteIcon/>
+              <DeleteIcon />
             </IconButton>
           </Box>
 
@@ -67,7 +68,7 @@ const PageEditor = ({
             value={page.content_cn}
             onChange={(e) => onContentChange('content_cn', e.target.value)}
             disabled={disabled}
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
           />
 
           <TextField
@@ -78,24 +79,19 @@ const PageEditor = ({
             value={page.content_hakka}
             onChange={(e) => onContentChange('content_hakka', e.target.value)}
             disabled={disabled}
-            sx={{mb: 2}}
+            sx={{ mb: 2 }}
           />
 
-          <AudioUpload
-            label="四縣腔 Audio"
-            value={page.audio_sijian || ''}
-            onChange={(url) => onAudioChange('audio_sijian', url)}
-            disabled={disabled}
-            pageNumber={page.page_number}  // 添加這行
-          />
-
-          <AudioUpload
-            label="海陸腔 Audio"
-            value={page.audio_hailu || ''}
-            onChange={(url) => onAudioChange('audio_hailu', url)}
-            disabled={disabled}
-            pageNumber={page.page_number}  // 添加這行
-          />
+          {DIALECTS.map(dialect => (
+            <AudioUpload
+              key={dialect.key}
+              label={`${dialect.label} Audio`}
+              value={page.audios?.[dialect.key] || ''}
+              onChange={(url) => onAudioChange(dialect.key, url)}
+              disabled={disabled}
+              pageNumber={page.page_number}
+            />
+          ))}
         </Box>
       </Box>
     </Paper>
