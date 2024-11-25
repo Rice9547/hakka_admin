@@ -12,20 +12,19 @@ import {
   Upload as UploadIcon,
   PlayArrow as PlayIcon,
   Pause as PauseIcon,
-  Delete as DeleteIcon,
+  Delete as DeleteIcon, AutoAwesome,
 } from '@mui/icons-material';
 import { useAudioUpload } from "../../api/audio";
 
-const AudioUpload = ({ value, onChange, label, disabled, pageNumber }) => {
+const AudioUpload = ({ value, onChange, label, disabled, pageNumber, hakkaText }) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(new Audio());
   const fileInputRef = useRef(null);
 
-  const { uploadAudio } = useAudioUpload();
-
-  const inputId = `audio-upload-${label}-page-${pageNumber}`;
+  const { uploadAudio, generateAudio } = useAudioUpload();
 
   const handleUpload = async (event) => {
     const file = event.target.files[0];
@@ -51,6 +50,26 @@ const AudioUpload = ({ value, onChange, label, disabled, pageNumber }) => {
     }
   };
 
+  const handleGenerate = async () => {
+    if (!hakkaText) {
+      setError('Hakka text is required to generate audio');
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      setError(null);
+
+      const data = await generateAudio(hakkaText);
+      onChange(data.url);
+    } catch (err) {
+      setError('Failed to generate audio');
+      console.error('Generation error:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
   const togglePlay = () => {
     if (!value) return;
 
@@ -69,14 +88,6 @@ const AudioUpload = ({ value, onChange, label, disabled, pageNumber }) => {
         setError('Failed to play audio');
       });
     }
-  };
-
-  const handleDelete = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    }
-    onChange('');
-    setError(null);
   };
 
   useEffect(() => {
@@ -136,14 +147,14 @@ const AudioUpload = ({ value, onChange, label, disabled, pageNumber }) => {
         <input
           ref={fileInputRef}
           accept="audio/*"
-          id={inputId}
+          id={`audio-upload-${label}-${pageNumber}`}
           type="file"
           style={{ display: 'none' }}
           onChange={handleUpload}
           disabled={disabled || isUploading}
         />
 
-        <label htmlFor={inputId}>
+        <label htmlFor={`audio-upload-${label}-${pageNumber}`}>
           <Button
             variant="outlined"
             component="span"
@@ -154,6 +165,16 @@ const AudioUpload = ({ value, onChange, label, disabled, pageNumber }) => {
             Upload
           </Button>
         </label>
+
+        <Button
+          variant="outlined"
+          onClick={handleGenerate}
+          disabled={disabled || isGenerating || !hakkaText}
+          startIcon={isGenerating ? <CircularProgress size={20} /> : <AutoAwesome />}
+          size="small"
+        >
+          Generate
+        </Button>
 
         {value && (
           <>
@@ -166,7 +187,7 @@ const AudioUpload = ({ value, onChange, label, disabled, pageNumber }) => {
             </IconButton>
 
             <IconButton
-              onClick={handleDelete}
+              onClick={() => onChange('')}
               disabled={disabled}
               size="small"
               color="error"

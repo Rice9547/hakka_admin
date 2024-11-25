@@ -90,6 +90,7 @@ const PageEditor = ({
               onChange={(url) => onAudioChange(dialect.key, url)}
               disabled={disabled}
               pageNumber={page.page_number}
+              hakkaText={page.content_hakka}
             />
           ))}
         </Box>

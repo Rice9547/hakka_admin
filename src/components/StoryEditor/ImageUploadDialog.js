@@ -22,7 +22,7 @@ const ImageUploadDialog = ({ open, onClose, onSelectImage, initialPrompt = '' })
   const [generationPrompt, setGenerationPrompt] = useState(initialPrompt);
   const [generatedImage, setGeneratedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
-  const { uploadImage } = useImageUpload();
+  const { uploadImage, generateImage } = useImageUpload();
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -56,17 +56,7 @@ const ImageUploadDialog = ({ open, onClose, onSelectImage, initialPrompt = '' })
       setIsUploading(true);
       setError(null);
 
-      const response = await fetch('/api/admin/image/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ prompt: generationPrompt }),
-      });
-
-      if (!response.ok) throw new Error('Generation failed');
-
-      const data = await response.json();
+      const data = await generateImage(generationPrompt);
       setGeneratedImage(data.url);
     } catch (err) {
       setError('Failed to generate image');
