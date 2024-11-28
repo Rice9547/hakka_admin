@@ -44,24 +44,26 @@ export const useStoryActions = () => {
     }))
   };
 
-  const handleCreateStory = async (title, description, cover_image, pages) => {
+  const handleCreateStory = async (title, description, cover_image, pages, categories) => {
     const data = {
       title,
       description,
       cover_image,
-      pages: transformPages(pages)
+      pages: transformPages(pages),
+      categories: categories
     };
 
     await createStory(data);
     mutateStory(mutate);
   };
 
-  const handleUpdateStory = async (id, title, description, cover_image, pages) => {
+  const handleUpdateStory = async (id, title, description, cover_image, pages, categories) => {
     const data = {
       title,
       description,
       cover_image,
-      pages: transformPages(pages)
+      pages: transformPages(pages),
+      categories: categories
     };
 
     await updateStory(id, data);

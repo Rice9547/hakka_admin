@@ -21,18 +21,22 @@ import { useStory, useStoryActions } from '../../hooks/useStory';
 import PageEditor from './PageEditor';
 import PreviewDialog from './PreviewDialog';
 import ImageInput from "./ImageInput";
+import {useCategories} from "../../hooks/useCategory";
+import CategorySelect from "./CategorySelect";
 
 const StoryEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { story, isLoading, isError } = useStory(id);
+  const { categories, isLoading: isLoadingCategories, isError: isFetchCategoryError } = useCategories();
   const { createStory, updateStory } = useStoryActions();
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     cover_image: '',
-    pages: []
+    pages: [],
+    categories: [],
   });
   const [previewOpen, setPreviewOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -52,7 +56,8 @@ const StoryEditor = () => {
             acc[audio.dialect] = audio.audio_url;
             return acc;
           }, {})
-        }))
+        })),
+        categories: story.categories || [],
       });
     }
   }, [id, story]);
@@ -164,9 +169,9 @@ const StoryEditor = () => {
     try {
       setSaving(true);
       if (id) {
-        await updateStory(id, formData.title, formData.description, formData.cover_image, formData.pages);
+        await updateStory(id, formData.title, formData.description, formData.cover_image, formData.pages, formData.categories);
       } else {
-        await createStory(formData.title, formData.description, formData.cover_image, formData.pages);
+        await createStory(formData.title, formData.description, formData.cover_image, formData.pages, formData.categories);
       }
       navigate('/admin');
     } catch (err) {
@@ -176,7 +181,7 @@ const StoryEditor = () => {
     }
   };
 
-  if (id && isLoading) {
+  if (id && (isLoading || isLoadingCategories)) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
         <CircularProgress />
@@ -184,7 +189,7 @@ const StoryEditor = () => {
     );
   }
 
-  if (id && isError) {
+  if (id && (isError || isFetchCategoryError)) {
     return (
       <Container maxWidth="sm" sx={{ mt: 4 }}>
         <Alert severity="error">
@@ -243,6 +248,16 @@ const StoryEditor = () => {
           onChange={(url) => handleMainFieldChange('cover_image', url)}
           description={formData.description}
         />
+
+        <Box sx={{ mb: 3 }}>
+          <CategorySelect
+            value={formData.categories}
+            onChange={(newCategories) =>
+              setFormData(prev => ({ ...prev, categories: newCategories }))
+            }
+            options={categories}
+          />
+        </Box>
 
         <Paper sx={{ p: 2, mt: 2 }}>
           {formData.pages.map((page, index) => (
