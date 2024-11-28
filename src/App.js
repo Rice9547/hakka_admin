@@ -2,8 +2,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Auth0ProviderWithNavigate } from './auth/auth0-provider';
 import { LoginPage } from './components/LoginPage';
 import { PrivateRoute } from './components/PrivateRoute';
-import { AdminDashboard } from './components/AdminDashboard';
+import { StoryPage } from './components/StoryPage';
 import StoryEditor from './components/StoryEditor';
+import { AdminLayout } from "./components/AdminLayout";
+import {CategoryPage} from "./components/CategoryPage";
+import CategoryEditor from "./components/CategoryEditor";
 
 const App = () => {
   return (
@@ -13,11 +16,21 @@ const App = () => {
           <Route path="/" element={<LoginPage />} />
           <Route path="/admin/*" element={
             <PrivateRoute>
-              <Routes>
-                <Route index element={<AdminDashboard />} />
-                <Route path="story/new" element={<StoryEditor />} />
-                <Route path="story/:id" element={<StoryEditor />} />
-              </Routes>
+              <AdminLayout>
+                <Routes>
+                  <Route index element={<StoryPage />} />
+                  <Route path="/story/*">
+                    <Route path="" element={<StoryPage />} />
+                    <Route path="new" element={<StoryEditor />} />
+                    <Route path=":id" element={<StoryEditor />} />
+                  </Route>
+                  <Route path="/category/*">
+                    <Route path="" element={<CategoryPage />} />
+                    <Route path="new" element={<CategoryEditor />} />
+                    <Route path=":id" element={<CategoryEditor />} />
+                  </Route>
+                </Routes>
+              </AdminLayout>
             </PrivateRoute>
           } />
         </Routes>
