@@ -40,8 +40,8 @@ export const AdminLayout = ({ children }) => {
                 }
               }}
             >
-              <Tab label="Stories" />
-              <Tab label="Categories" />
+              <Tab label="Stories" onClick={() => navigate('/admin/story')} />
+              <Tab label="Categories" onClick={() => navigate('/admin/category')} />
             </Tabs>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
