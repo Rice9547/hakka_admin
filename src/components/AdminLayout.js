@@ -28,7 +28,7 @@ export const AdminLayout = ({ children }) => {
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6">Story Admin</Typography>
+            <Typography variant="h6">Hakka Admin</Typography>
             <Tabs
               value={currentTab}
               onChange={handleTabChange}
