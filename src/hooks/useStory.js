@@ -35,6 +35,7 @@ export const useStoryActions = () => {
       content_cn: page.content_cn,
       content_hakka: page.content_hakka,
       page_number: page.page_number,
+      image: page.image,
       audios: Object.entries(page.audios)
         .filter(([_, url]) => url)
         .map(([dialect, audio_url]) => ({

@@ -14,6 +14,7 @@ import {
 import AudioUpload from './AudioUpload';
 import { DIALECTS } from '../../hooks/useStory';
 import {useTranslator} from "../../api/translate";
+import ImageInput from "./ImageInput";
 
 const PageEditor = ({
   page,
@@ -140,6 +141,12 @@ const PageEditor = ({
               hakkaText={page.content_hakka}
             />
           ))}
+
+          <ImageInput
+            value={page.image}
+            onChange={(url) => onContentChange('image', url)}
+            description={page.content_cn}
+          />
         </Box>
       </Box>
     </Paper>

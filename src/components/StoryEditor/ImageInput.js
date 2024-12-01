@@ -37,7 +37,7 @@ const ImageInput = ({ value, onChange, description }) => {
       <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
         <TextField
           fullWidth
-          label="Cover Image URL"
+          label="Image URL"
           value={imageUrl}
           onChange={handleUrlChange}
           helperText="Enter image URL or use upload button"

@@ -52,6 +52,7 @@ const StoryEditor = () => {
           content_cn: page.content_cn || '',
           content_hakka: page.content_hakka || '',
           page_number: page.page_number,
+          image: page.image || '',
           audios: (page.audios || []).reduce((acc, audio) => {
             acc[audio.dialect] = audio.audio_url;
             return acc;
@@ -71,6 +72,7 @@ const StoryEditor = () => {
           content_cn: '',
           content_hakka: '',
           page_number: prev.pages.length + 1,
+          image: '',
           audios: {}
         },
       ]
@@ -262,7 +264,7 @@ const StoryEditor = () => {
         <Paper sx={{ p: 2, mt: 2 }}>
           {formData.pages.map((page, index) => (
             <PageEditor
-              key={`page-${page.page_number}`}  // 使用更明確的 key
+              key={`page-${page.page_number}`}
               page={page}
               onDelete={() => handleDeletePage(index)}
               onMove={(direction) => handleMovePage(index, direction)}
