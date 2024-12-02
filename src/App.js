@@ -25,6 +25,7 @@ const App = () => {
                     <Route path="new" element={<StoryEditor />} />
                     <Route path=":id" element={<StoryEditor />} />
                     <Route path="exercises" element={<ExercisePage />} />
+                    <Route path=":id/exercises" element={<ExercisePage />} />
                   </Route>
                   <Route path="/category/*">
                     <Route path="" element={<CategoryPage />} />

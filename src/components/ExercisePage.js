@@ -1,7 +1,12 @@
 import React from 'react';
-import { ExerciseCountList } from './ExerciseList';
+import { useParams} from "react-router-dom";
+import ExerciseDetail from "./ExerciseList/ExerciseDetail";
+import {ExerciseCountList} from "./ExerciseList";
 
-export const ExercisePage = () => {return (
-    <ExerciseCountList />
+export const ExercisePage = () => {
+  const { id } = useParams();
+
+  return (
+    id ? <ExerciseDetail /> : <ExerciseCountList />
   );
 }; 

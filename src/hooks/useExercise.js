@@ -1,4 +1,4 @@
-import { useStoryExercisesCount } from '../api/exercise';
+import {useStoryExercises, useStoryExercisesCount} from '../api/exercise';
 
 export const useStoryExerciseCount = () => {
   const { data, error, isLoading } = useStoryExercisesCount();
@@ -9,3 +9,13 @@ export const useStoryExerciseCount = () => {
     isError: error
   };
 };
+
+export const useStoryExerciseList = (story_id) => {
+  const { data, error, isLoading } = useStoryExercises(story_id);
+
+  return {
+    exercises: data?.data || [],
+    isLoading,
+    isError: error
+  };
+}
