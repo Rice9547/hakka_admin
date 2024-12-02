@@ -18,12 +18,13 @@ import {
   Edit as EditIcon,
   Add as AddIcon
 } from "@mui/icons-material";
-import {useStoryExerciseList} from '../../hooks/useExercise';
+import {useExerciseActions, useStoryExerciseList} from '../../hooks/useExercise';
 
 const ExerciseList = () => {
   const navigate = useNavigate();
   const {id} = useParams();
   const {exercises, isLoading, isError} = useStoryExerciseList(id);
+  const { deleteExercise } = useExerciseActions();
 
   if (isError) {
     return <Typography color="error">無法載入練習題目</Typography>;
@@ -46,7 +47,7 @@ const ExerciseList = () => {
 
   const onDelete = (exerciseId) => {
     if (window.confirm('確定要刪除此練習題？')) {
-      console.log('Delete exercise:', exerciseId);
+      deleteExercise(id, exerciseId);
     }
   }
 
