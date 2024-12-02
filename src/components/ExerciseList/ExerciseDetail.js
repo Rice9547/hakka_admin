@@ -1,5 +1,5 @@
 import React from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -9,12 +9,19 @@ import {
   CircularProgress,
   ListItem,
   ListItemText,
-  Divider, IconButton
+  Divider,
+  IconButton,
+  Button
 } from '@mui/material';
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  Add as AddIcon
+} from "@mui/icons-material";
 import {useStoryExerciseList} from '../../hooks/useExercise';
-import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
 
-const ExerciseDetail = () => {
+const ExerciseList = () => {
+  const navigate = useNavigate();
   const {id} = useParams();
   const {exercises, isLoading, isError} = useStoryExerciseList(id);
 
@@ -33,25 +40,42 @@ const ExerciseDetail = () => {
     }
   }
 
-  const onEdit = (id, exercise) => {
-    console.log('Edit exercise:', exercise);
+  const onEdit = (exerciseId, exercise) => {
+    navigate(`/admin/story/${id}/exercises/${exerciseId}`, { state: exercise });
   }
 
-  const onDelete = (id) => {
-    console.log('Delete category:', id);
+  const onDelete = (exerciseId) => {
+    if (window.confirm('確定要刪除此練習題？')) {
+      console.log('Delete exercise:', exerciseId);
+    }
   }
 
   return (
     <Container maxWidth="md">
       <Box sx={{my: 4}}>
-        <Typography variant="h4" component="h1" sx={{mb: 3}}>
-          題目列表
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+          <Typography variant="h4" component="h1">
+            練習題目列表
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => navigate(`/admin/story/${id}/exercises/new`)}
+          >
+            新增練習題
+          </Button>
+        </Box>
 
         <Paper>
           {isLoading ? (
             <Box sx={{display: 'flex', justifyContent: 'center', p: 3}}>
               <CircularProgress/>
+            </Box>
+          ) : exercises.length === 0 ? (
+            <Box sx={{ p: 3, textAlign: 'center' }}>
+              <Typography color="text.secondary">
+                尚無練習題目
+              </Typography>
             </Box>
           ) : (
             <List>
@@ -60,28 +84,18 @@ const ExerciseDetail = () => {
                   <ListItem
                     secondaryAction={
                       <Box>
-                        <IconButton edge="end" onClick={() => onEdit(exercise.id, exercise)}>
+                        <IconButton onClick={() => onEdit(exercise.id, exercise)}>
                           <EditIcon/>
                         </IconButton>
-                        <IconButton edge="end" onClick={() => onDelete(exercise.id)}>
+                        <IconButton onClick={() => onDelete(exercise.id)}>
                           <DeleteIcon/>
                         </IconButton>
                       </Box>
                     }
                   >
                     <ListItemText
-                      primary={
-                        <Typography variant="h6">
-                          #{exercise.id}: {exercise.prompt_text}
-                        </Typography>
-                      }
-                      secondary={
-                        <Box sx={{mt: 1}}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            題目類型: {getExerciseType(exercise.type)}
-                          </Typography>
-                        </Box>
-                      }
+                      primary={`#${exercise.id}: ${exercise.prompt_text}`}
+                      secondary={`題目類型: ${getExerciseType(exercise.type)}`}
                     />
                   </ListItem>
                   {index < exercises.length - 1 && <Divider/>}
@@ -95,4 +109,4 @@ const ExerciseDetail = () => {
   );
 };
 
-export default ExerciseDetail; 
+export default ExerciseList;

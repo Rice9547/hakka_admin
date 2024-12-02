@@ -8,6 +8,7 @@ import { AdminLayout } from "./components/AdminLayout";
 import { CategoryPage } from "./components/CategoryPage";
 import CategoryEditor from "./components/CategoryEditor";
 import { ExercisePage } from './components/ExercisePage';
+import ExerciseEditor from "./components/ExerciseEditor";
 
 const App = () => {
   return (
@@ -26,6 +27,8 @@ const App = () => {
                     <Route path=":id" element={<StoryEditor />} />
                     <Route path="exercises" element={<ExercisePage />} />
                     <Route path=":id/exercises" element={<ExercisePage />} />
+                    <Route path=":id/exercises/new" element={<ExerciseEditor />} />
+                    <Route path=":id/exercises/:exerciseId" element={<ExerciseEditor />} />
                   </Route>
                   <Route path="/category/*">
                     <Route path="" element={<CategoryPage />} />
