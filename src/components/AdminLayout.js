@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   Box,
   AppBar,
@@ -16,12 +16,27 @@ export const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAdmin, logout } = useAuth();
-
-  const currentTab = location.pathname.search( '/admin/category') === 0 ? 1 : 0;
+  const [ currentTab, setCurrentTab ] = React.useState(0);
 
   const handleTabChange = (event, newValue) => {
     navigate(newValue === 1 ? '/admin/category' : '/admin/story');
   };
+
+  const getCurrentTab = useCallback(() => {
+    const pathname = location.pathname;
+    switch (true) {
+      case /^\/admin\/story\/(?:[^/]+\/)?exercises(?:\/|$)/.test(pathname):
+        return 2;
+      case /^\/admin\/category/.test(pathname):
+        return 1;
+      default:
+        return 0;
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    setCurrentTab(getCurrentTab());
+  }, [location.pathname, getCurrentTab]);
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -42,6 +57,7 @@ export const AdminLayout = ({ children }) => {
             >
               <Tab label="Stories" onClick={() => navigate('/admin/story')} />
               <Tab label="Categories" onClick={() => navigate('/admin/category')} />
+              <Tab label="Exercises" onClick={() => navigate('/admin/story/exercises')} />
             </Tabs>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

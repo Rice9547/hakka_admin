@@ -5,8 +5,9 @@ import { PrivateRoute } from './components/PrivateRoute';
 import { StoryPage } from './components/StoryPage';
 import StoryEditor from './components/StoryEditor';
 import { AdminLayout } from "./components/AdminLayout";
-import {CategoryPage} from "./components/CategoryPage";
+import { CategoryPage } from "./components/CategoryPage";
 import CategoryEditor from "./components/CategoryEditor";
+import { ExercisePage } from './components/ExercisePage';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
                     <Route path="" element={<StoryPage />} />
                     <Route path="new" element={<StoryEditor />} />
                     <Route path=":id" element={<StoryEditor />} />
+                    <Route path="exercises" element={<ExercisePage />} />
                   </Route>
                   <Route path="/category/*">
                     <Route path="" element={<CategoryPage />} />
