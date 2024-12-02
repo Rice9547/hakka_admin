@@ -21,10 +21,10 @@ import {
 import {useExerciseActions} from "../../hooks/useExercise";
 
 const ExerciseEditor = () => {
-  const { id } = useParams();
+  const { id, exerciseId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { createExercise } = useExerciseActions();
+  const { createExercise, updateExercise } = useExerciseActions();
   const defaultExercise = {
     prompt_text: "",
     audio_url: "",
@@ -110,7 +110,11 @@ const ExerciseEditor = () => {
 
     try {
       setSaving(true);
-      await createExercise(id, formData);
+      if (exerciseId) {
+        await updateExercise(id, exerciseId, formData);
+      } else {
+        await createExercise(id, formData);
+      }
       navigate(-1);
     } catch (err) {
       setError(err.info?.message || "Error saving exercise");

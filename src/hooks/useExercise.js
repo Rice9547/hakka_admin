@@ -26,7 +26,6 @@ export const useExerciseActions = () => {
   const { createExercise, updateExercise, deleteExercise } = useExerciseMutations();
 
   const ensureAnswerType = (data) => {
-    console.log(data)
     if (data.type === 0) {
       return {
         ...data,
