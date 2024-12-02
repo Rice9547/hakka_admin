@@ -6,7 +6,7 @@ import {
   Typography,
   Tabs,
   Tab,
-  Button,
+  Button, Alert,
 } from '@mui/material';
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -15,7 +15,7 @@ import { useAuth } from '../hooks/useAuth';
 export const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
 
   const currentTab = location.pathname.search( '/admin/category') === 0 ? 1 : 0;
 
@@ -58,7 +58,9 @@ export const AdminLayout = ({ children }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      {children}
+      {isAdmin ? children : <Alert severity="error">
+        You are not authorized to access this page.
+      </Alert>}
     </Box>
   );
 };
