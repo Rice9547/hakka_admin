@@ -16,9 +16,11 @@ import {
 } from "@mui/material";
 import {
   Add as AddIcon,
-  Delete as DeleteIcon,
+  Delete as DeleteIcon, MenuBook,
 } from "@mui/icons-material";
 import {useExerciseActions} from "../../hooks/useExercise";
+import {useStory} from "../../hooks/useStory";
+import StoryPreviewDialog from "./StoryPreviewDialog";
 
 const ExerciseEditor = () => {
   const { id, exerciseId } = useParams();
@@ -33,6 +35,8 @@ const ExerciseEditor = () => {
     choices: [],
   };
   const [formData, setFormData] = useState(defaultExercise);
+  const { story, isLoading, isError } = useStory(id);
+  const [storyDialogOpen, setStoryDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
@@ -47,7 +51,13 @@ const ExerciseEditor = () => {
         choices: exercise.choices || [],
       });
     }
-  }, [location.state]);
+
+    if (isError) {
+      setError("Error loading story");
+    } else {
+      setError(null)
+    }
+  }, [location.state, isError]);
 
   const handleAddAnswer = () => {
     setFormData({
@@ -126,9 +136,16 @@ const ExerciseEditor = () => {
   return (
     <Container maxWidth="md">
       <Paper sx={{ p: 3, mt: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Exercise Editor
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+          <Typography variant="h4">Exercise Editor</Typography>
+          <Button
+            variant="outlined"
+            onClick={() => !isLoading && setStoryDialogOpen(true)}
+            startIcon={isLoading ? <CircularProgress /> : <MenuBook />}
+          >
+            View Story Content
+          </Button>
+        </Box>
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -252,6 +269,12 @@ const ExerciseEditor = () => {
             </Button>
           </Box>
         </Stack>
+
+        <StoryPreviewDialog
+          open={storyDialogOpen}
+          onClose={() => setStoryDialogOpen(false)}
+          story={story}
+        />
       </Paper>
     </Container>
   );
