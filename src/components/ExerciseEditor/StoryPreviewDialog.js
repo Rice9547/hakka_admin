@@ -49,12 +49,13 @@ const StoryPreviewDialog = ({ open, onClose, story }) => {
             </Box>
             <Typography variant="body1" sx={{ mb: 2 }}>{page.content_hakka}</Typography>
 
-            {page.audio_sijian && (
-              <audio controls src={page.audio_sijian} sx={{ mb: 1 }} />
-            )}
-            {page.audio_hailu && (
-              <audio controls src={page.audio_hailu} sx={{ mb: 1 }} />
-            )}
+            {page.audios.map((audio, index) => (
+              <Box key={index} sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                <Typography variant="subtitle2">{audio.audio_url}</Typography>
+                <CopyButton text={audio.audio_url}/>
+                <audio key={index} controls src={audio.audio_url} sx={{mb: 1}}/>
+              </Box>
+            ))}
           </Box>
         ))}
       </DialogContent>
